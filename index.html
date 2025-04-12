@@ -1,0 +1,202 @@
+04.12 10:40 AM
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Time Travel Tic Tac Toe</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+    body {
+      background: linear-gradient(to right, #0f0f1a, #1a1a2e);
+      color: #00fff7;
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 2.5em;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 120px);
+      grid-gap: 15px;
+      margin: 30px auto;
+      width: 390px;
+    }
+
+    .cell {
+      width: 120px;
+      height: 120px;
+      font-size: 3.5em;
+      color: #fff;
+      background: #1a1a2e;
+      border: 2px solid #00fff7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .cell:hover {
+      background: #27293d;
+      transform: scale(1.05);
+    }
+
+    .controls {
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      font-size: 1.1em;
+      background: #00fff7;
+      color: #0f0f1a;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+      font-weight: bold;
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Time Travel Tic Tac Toe</h1>
+
+  <!-- Adsterra Banner Ad -->
+  <div id="ad-container" style="margin: 20px auto; text-align:center;">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '26256795',
+        'format' : 'iframe',
+        'height' : 90,
+        'width' : 728,
+        'params' : {}
+      };
+      document.write('<scr' + 'ipt type="text/javascript" src="https://www.profitabledisplaynetwork.com/4839213/'+atOptions.key+'/invoke.js"></scr' + 'ipt>');
+    </script>
+  </div>
+
+  <div class="board" id="board"></div>
+  <div class="controls">
+    <button class="btn" onclick="useTimeTravel()">Use Time-Travel Token</button>
+    <button class="btn" onclick="restartGame()">Restart Game</button>
+    <p id="status"></p>
+  </div>
+
+  <!-- Background Music -->
+  <audio id="bgMusic" autoplay loop>
+    <source src="videoplayback.m4a" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Win Music -->
+  <audio id="winSound">
+    <source src="videoplayback.m4a" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    const board = document.getElementById('board');
+    const statusText = document.getElementById('status');
+    const bgMusic = document.getElementById('bgMusic');
+    const winSound = document.getElementById('winSound');
+
+    let gameHistory = [];
+    let currentBoard = Array(9).fill('');
+    let currentPlayer = 'X';
+    let timeTravelUsed = { X: false, O: false };
+    let gameActive = true;
+
+    function renderBoard() {
+      board.innerHTML = '';
+      currentBoard.forEach((val, i) => {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.innerText = val;
+        cell.onclick = () => makeMove(i);
+        board.appendChild(cell);
+      });
+    }
+
+    function makeMove(index) {
+      if (!gameActive || currentBoard[index]) return;
+      gameHistory.push([...currentBoard]);
+      currentBoard[index] = currentPlayer;
+
+      if (checkWin(currentPlayer)) {
+        statusText.innerText = `${currentPlayer} Wins!`;
+        winSound.play();
+        gameActive = false;
+      } else if (!currentBoard.includes('')) {
+        statusText.innerText = "It's a Draw!";
+        gameActive = false;
+      } else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        statusText.innerText = `Turn: ${currentPlayer}`;
+      }
+      renderBoard();
+    }
+
+    function useTimeTravel() {
+      if (!gameActive || timeTravelUsed[currentPlayer]) {
+        alert("Token already used or game over.");
+        return;
+      }
+      const moveNumber = prompt("Enter move number to travel to (1 to " + gameHistory.length + "):");
+      const moveIndex = parseInt(moveNumber) - 1;
+      if (isNaN(moveIndex) || moveIndex < 0 || moveIndex >= gameHistory.length) return;
+      currentBoard = [...gameHistory[moveIndex]];
+      gameHistory = gameHistory.slice(0, moveIndex + 1);
+      timeTravelUsed[currentPlayer] = true;
+      gameActive = true;
+      statusText.innerText = `${currentPlayer} used time-travel! Continue playing.`;
+      renderBoard();
+    }
+
+    function checkWin(player) {
+      const wins = [
+        [0,1,2], [3,4,5], [6,7,8],
+        [0,3,6], [1,4,7], [2,5,8],
+        [0,4,8], [2,4,6]
+      ];
+      return wins.some(combo =>
+        combo.every(i => currentBoard[i] === player)
+      );
+    }
+
+    function restartGame() {
+      currentBoard = Array(9).fill('');
+      gameHistory = [];
+      timeTravelUsed = { X: false, O: false };
+      currentPlayer = 'X';
+      gameActive = true;
+      statusText.innerText = `Turn: ${currentPlayer}`;
+      renderBoard();
+    }
+
+    renderBoard();
+    statusText.innerText = `Turn: ${currentPlayer}`;
+  </script>
+</body>
+</html><!-- Adsterra Banner Ad -->
+<div id="ad-container" style="margin: 20px auto; text-align:center;">
+  <script type="text/javascript" src="https://www.profitabledisplaynetwork.com/4839213/26256795/invoke.js"></script>
+</div><script type="text/javascript">
+	atOptions = {
+		'key' : 'f894ad51cd2a644f0ca99b32c48151e0',
+		'format' : 'iframe',
+		'height' : 60,
+		'width' : 468,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/f894ad51cd2a644f0ca99b32c48151e0/invoke.js"></script><script type='text/javascript' src='//pl26357683.profitableratecpm.com/a5/22/01/a522011d77ad6d660bfaecb336d9ce3f.js'></script>

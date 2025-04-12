@@ -1,0 +1,82 @@
+04.11 8:09 PM
+JavaScript 
+const board = document.getElementById('board');
+const statusText = document.getElementById('status');
+const bgMusic = document.getElementById('bgMusic');
+const winSound = document.getElementById('winSound');
+
+let gameHistory = [];
+let currentBoard = Array(9).fill('');
+let currentPlayer = 'X';
+let timeTravelUsed = { X: false, O: false };
+let gameActive = true;
+
+function renderBoard() {
+  board.innerHTML = '';
+  currentBoard.forEach((val, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.innerText = val;
+    cell.onclick = () => makeMove(i);
+    board.appendChild(cell);
+  });
+}
+
+function makeMove(index) {
+  if (!gameActive || currentBoard[index]) return;
+  gameHistory.push([...currentBoard]);
+  currentBoard[index] = currentPlayer;
+
+  if (checkWin(currentPlayer)) {
+    statusText.innerText = `${currentPlayer} Wins!`;
+    winSound.play();
+    gameActive = false;
+  } else if (!currentBoard.includes('')) {
+    statusText.innerText = "It's a Draw!";
+    gameActive = false;
+  } else {
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    statusText.innerText = `Turn: ${currentPlayer}`;
+  }
+  renderBoard();
+}
+
+function useTimeTravel() {
+  if (!gameActive || timeTravelUsed[currentPlayer]) {
+    alert("Token already used or game over.");
+    return;
+  }
+  const moveNumber = prompt("Enter move number to travel to (1 to " + gameHistory.length + "):");
+  const moveIndex = parseInt(moveNumber) - 1;
+  if (isNaN(moveIndex) || moveIndex < 0 || moveIndex >= gameHistory.length) return;
+  currentBoard = [...gameHistory[moveIndex]];
+  gameHistory = gameHistory.slice(0, moveIndex + 1);
+  timeTravelUsed[currentPlayer] = true;
+  gameActive = true;
+  statusText.innerText = `${currentPlayer} used time-travel! Continue playing.`;
+  renderBoard();
+}
+
+function checkWin(player) {
+  const wins = [
+    [0,1,2], [3,4,5], [6,7,8],
+    [0,3,6], [1,4,7], [2,5,8],
+    [0,4,8], [2,4,6]
+  ];
+  return wins.some(combo =>
+    combo.every(i => currentBoard[i] === player)
+  );
+}
+
+function restartGame() {
+  currentBoard = Array(9).fill('');
+  gameHistory = [];
+  timeTravelUsed = { X: false, O: false };
+  currentPlayer = 'X';
+  gameActive = true;
+  statusText.innerText = `Turn: ${currentPlayer}`;
+  renderBoard();
+}
+
+renderBoard();
+statusText.innerText = `Turn: ${currentPlayer}`;
